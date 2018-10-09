@@ -38,6 +38,7 @@ public class MqttConfig {
     @Autowired
     RealTimeMessageHandler realTimeMessageHandler;
 
+    @Autowired InReportMessageHandler inReportMessageHandler;
 
     /**
      * mqtt 的工厂  用来创建mqtt连接
@@ -86,7 +87,32 @@ public class MqttConfig {
 
 
     /**
-     * 盒子发进来的消息消息接收
+     * 监控设备的上报信息 IN/DEVICE
+     */
+    @Bean("MqttClientInMessageReportInbound")
+    public MessageProducerSupport getMqttClientInMessageReport(){
+        EMqttPahoMessageDrivenChannelAdapter adapter = new EMqttPahoMessageDrivenChannelAdapter(
+            "MqttClientInMessageReportInbound", mqttClientFactory());
+            //IN/DEVICE/DEFAULT_USER/DEFAULT_GROUP/ID  为客户端SUB的TOPIC
+            adapter.addTopic("IN/DEVICE/+/+/#");//监控设备publish的消息
+            adapter.setCompletionTimeout(5000);
+            adapter.setConverter(new DefaultPahoMessageConverter());
+            adapter.setQos(1);
+            return adapter;
+
+    }
+    /**
+     * 设备上报信息的消息处理器
+     */
+    @Bean("MqttClientInMessageReportInFlow")
+    public IntegrationFlow mqttClientInMessageReportInFlow(){
+        return IntegrationFlows.from(getMqttClientInMessageReport())
+                .handle(inReportMessageHandler)
+                .get();
+    }
+
+    /**
+     * 监控盒子发过来的echo信息，用于实现网页的printf
      *
      * @return
      */
@@ -95,8 +121,8 @@ public class MqttConfig {
         EMqttPahoMessageDrivenChannelAdapter adapter = new EMqttPahoMessageDrivenChannelAdapter(
                 "MqttClientInMessageListenerInbound",
                 mqttClientFactory());
-        //OUT/DEVICE/DEFAULT_USER/DEFAULT_GROUP/ID  为客户端SUB的TOPIC
-        adapter.addTopic("IN/ECHO/+/+/#");//监控设备publish的消息
+        //IN/ECHO/DEFAULT_USER/DEFAULT_GROUP/ID  为客户端SUB的TOPIC
+        adapter.addTopic("IN/ECHO/+/+/#");//监控设备echo的消息
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setQos(1);
@@ -106,7 +132,7 @@ public class MqttConfig {
 
 
     /**
-     * 监控设备盒子发进来的消息接受处理器
+     * 监控盒子发过来的echo信息的消息接受处理器
      *
      * @return
      */

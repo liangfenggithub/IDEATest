@@ -59,7 +59,7 @@ public class EasyLinkerApplication implements CommandLineRunner {
         getEmqInfo();
         checkOnlineDevice();
         checkOfflineDevice();
-        logger.info("EasyLinker启动成功!");
+        logger.info("Water启动成功!");
 
     }
 
@@ -82,17 +82,17 @@ public class EasyLinkerApplication implements CommandLineRunner {
         try {
 
             JSONObject emqInfoJson = restTemplate.getForObject(apiHost + "management/nodes/" + emqNodeName, JSONObject.class);
-            logger.info("┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
-            logger.info("┃EMQ版本：" + emqInfoJson.getJSONObject("result").getString("version"));
-            logger.info("┃EMQ描述：" + emqInfoJson.getJSONObject("result").getString("sysdescr"));
-            logger.info("┃EMQ开启时间：" + emqInfoJson.getJSONObject("result").getString("uptime"));
+            logger.info("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+            logger.info("┃Broker版本：" + emqInfoJson.getJSONObject("result").getString("version"));
+            logger.info("┃Broker版本描述：" + emqInfoJson.getJSONObject("result").getString("sysdescr"));
+            logger.info("┃Broker版本开启时间：" + emqInfoJson.getJSONObject("result").getString("uptime"));
             logger.info("┃状态：" + emqInfoJson.getJSONObject("result").getString("node_status"));
-            logger.info("┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+            logger.info("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 
 
         } catch (Exception e) {
             if (e instanceof ResourceAccessException)
-                logger.info("EMQ没有启动,服务器信息获取失败！");
+                logger.info("Broker版本没有启动,服务器信息获取失败！");
         }
     }
 
@@ -122,7 +122,7 @@ public class EasyLinkerApplication implements CommandLineRunner {
 
             JSONArray clientsArray = clientsJson.getJSONObject("result").getJSONArray("objects");
             if (clientsArray.size() > 4) {
-                logger.info("开始检测脱离EMQ的设备,开始恢复状态!");
+                logger.info("开始检测脱离Broker的设备,开始恢复状态!");
                 //需要考虑另一种情况: 设备电线了,但是没有改变状态
                 //虽然数据库显示 isOnline=true
                 //但是 EMQ并没有在线的 全部吧数据库更新一遍
@@ -158,7 +158,7 @@ public class EasyLinkerApplication implements CommandLineRunner {
         try {
             JSONObject clientsJson = restTemplate.getForObject(apiHost + "nodes/" + emqNodeName + "/clients", JSONObject.class);
             JSONArray clientsArray = clientsJson.getJSONObject("result").getJSONArray("objects");
-            logger.info("开始检测脱离EMQ控制的设备");
+            logger.info("开始检测脱离Broker控制的设备");
             List<Long> emqDeviceIdList = new ArrayList<>();
             for (Object o : clientsArray) {
                 JSONObject clientJson = (JSONObject) o;
@@ -187,7 +187,7 @@ public class EasyLinkerApplication implements CommandLineRunner {
             logger.info("恢复状态完毕!");
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("恢复EMQ状态的时候出现问题!请重启EasyLinker!", e.getLocalizedMessage());
+            logger.error("恢复Broker状态的时候出现问题!请重启Water!", e.getLocalizedMessage());
         }
 
     }

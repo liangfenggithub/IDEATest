@@ -43,6 +43,7 @@ public class InMessageHandler implements MessageHandler {
     public void handleMessage(Message<?> message) throws MessagingException {
         String topic = message.getHeaders().get("mqtt_topic").toString();
         try {
+
             if (topic.startsWith("IN/ECHO/")) {
                 Long openId = Long.parseLong(topic.split("/")[4]);
                 JSONObject dataJson = JSONObject.parseObject(message.getPayload().toString());
@@ -73,13 +74,12 @@ public class InMessageHandler implements MessageHandler {
                 } else {
                     logger.info("设备不存在!");
                 }
-
-
             }
-        } catch (Exception e) {
+        }catch (Exception e) {
             //提交的格式不正确
-            //只接受 from:IN/DEVICE/DEFAULT_USER/DEFAULT_GROUP/1521508320898
-            logger.error("数据格式出错!");
+            //只接受 from:IN/ECHO/DEFAULT_USER/DEFAULT_GROUP/1521508320898
+            logger.error("数据格式出错!只接受 from:IN/ECHO/DEFAULT_USER/DEFAULT_GROUP/DEFAULT_DEVICE_ID");
+            logger.error("收到的topic是：" + topic + "数据是："+ message.getPayload().toString());
 
         }
 

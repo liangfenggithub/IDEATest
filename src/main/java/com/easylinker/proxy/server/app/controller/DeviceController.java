@@ -6,6 +6,7 @@ import com.easylinker.proxy.server.app.model.device.Device;
 import com.easylinker.proxy.server.app.constants.result.ReturnResult;
 import com.easylinker.proxy.server.app.model.user.AppUser;
 import com.easylinker.proxy.server.app.service.*;
+import org.hibernate.loader.custom.Return;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -27,6 +28,8 @@ public class DeviceController {
     DeviceDataService deviceDataService;
     @Autowired
     DeviceGroupService deviceGroupService;
+    @Autowired
+    WaterService waterService;
 
     @Autowired
     DeviceOnAndOffLineLogService deviceOnAndOffLineLogService;
@@ -76,6 +79,47 @@ public class DeviceController {
         }
 
     }
+
+    /**
+     * 获取设备water的历史数据
+     */
+    @RequestMapping(value = "/getWaterData/{deviceId}/{page}/{size}",method = RequestMethod.GET)
+    public JSONObject getWaterData(@PathVariable Long deviceId, @PathVariable int page, @PathVariable int size){
+        Device device = deviceService.findADevice(deviceId);
+        if(device == null){
+            return ReturnResult.returnTipMessage(0,"设备不存在");
+        }
+        if(device.getAppUser() == null){
+            return ReturnResult.returnTipMessage(0,"设备未绑定");
+        }
+        if(device != null){
+            JSONObject data = waterService.getAllDeviceDataByDevice(device,PageRequest.of(page,size,Sort.by(Sort.Direction.DESC,"createTime")));
+            return ReturnResult.returnDataMessage(1,"查询成功",data);
+        }else{
+            return ReturnResult.returnTipMessage(0,"设备不存在");
+        }
+    }
+
+    /**
+     * 分页获取设备water的历史数据
+     */
+//    @RequestMapping(value = "/getWaterDataByPage/{deviceId}/{page}/{size}",method = RequestMethod.GET)
+//    public JSONObject getWaterDataByPage(@PathVariable Long deviceId, @PathVariable int page, @PathVariable int size){
+//        Device device = deviceService.findADevice(deviceId);
+//        if(device == null){
+//            return ReturnResult.returnTipMessage(0,"设备不存在");
+//        }
+//        if(device.getAppUser() == null){
+//            return ReturnResult.returnTipMessage(0,"设备未绑定");
+//        }
+//        if(device != null){
+//            JSONObject data = waterService.getAllDeviceDataByPage(device,PageRequest.of(page,size,Sort.by(Sort.Direction.DESC,"createTime")));
+//            return ReturnResult.returnDataMessage(1,"查询成功",data);
+//
+//        }else{
+//            return ReturnResult.returnTipMessage(0,"设备不存在");
+//        }
+//    }
 
 
     /**

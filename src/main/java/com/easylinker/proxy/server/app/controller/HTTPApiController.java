@@ -85,7 +85,7 @@ public class HTTPApiController {
                 cmd.put("retain", false);
                 cmd.put("client_id", "easylinker_server");
                 try {
-                    //System.out.println(cmd);
+                    System.out.println("/sendCmdToDevice 前端页面发送的数据是："+cmd);
                     httpTool.postWithAuthorization(apiHost + "mqtt/publish", cmd);
 
                     //保存记录

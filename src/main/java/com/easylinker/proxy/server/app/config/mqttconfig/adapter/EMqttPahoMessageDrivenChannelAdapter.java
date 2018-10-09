@@ -208,7 +208,7 @@ public class EMqttPahoMessageDrivenChannelAdapter extends AbstractMqttMessageDri
              * 当连接失败或者ACL 拒绝的时候，这里抛出异常，此时就需要检查EMQ的配置了
              */
 
-            this.logger.error("EMQ配置错误，导致EasyLinker无法连接，检查配置！");
+            this.logger.error("Broker配置错误，导致Water无法连接，检查配置！");
             //连接失败以后,吧数据库里面的状态更新一下
             EMQInfo emqInfo = new EMQInfo();
             emqInfo.setId(1L);
@@ -271,7 +271,7 @@ public class EMqttPahoMessageDrivenChannelAdapter extends AbstractMqttMessageDri
                         /**
                          * 尝试重新连接引发的异常
                          */
-                        EMqttPahoMessageDrivenChannelAdapter.this.logger.error("EMQ配置错误，导致EasyLinker无法连接，检查配置！");
+                        EMqttPahoMessageDrivenChannelAdapter.this.logger.error("Broker配置错误，导致Water无法连接，检查配置！");
                         //EMqttPahoMessageDrivenChannelAdapter.this.logger.error("Exception while connecting and subscribing", var4);
                         EMqttPahoMessageDrivenChannelAdapter.this.scheduleReconnect();
                     }
@@ -290,7 +290,7 @@ public class EMqttPahoMessageDrivenChannelAdapter extends AbstractMqttMessageDri
      * @param cause
      */
     public synchronized void connectionLost(Throwable cause) {
-        this.logger.error("EasyLinker和EMQ的连接断开，尝试重新连接······");
+        this.logger.error("Water和Broker的连接断开，尝试重新连接······");
         //this.logger.error("Lost connection:" + cause.getMessage() + "; retrying...");
         this.connected = false;
         this.scheduleReconnect();

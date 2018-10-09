@@ -32,32 +32,33 @@ public class ApplicationTests {
     @Test
     public void addDefaultAccount() throws Exception {
 
-        if (appUserService.getAUserById(1L) == null) {
-            AppUser appUser = new AppUser();
-            appUser.setId(1L);
-            appUser.setUsername("administrator");
-            appUser.setPassword(MD5Generator.EncodingMD5("administrator"));
-            appUser.setEmail("administrator@admin.com");
-            appUser.setPhone("8888888888");
-            appUserService.save(appUser);
-            //普通用户的角色
-            UserRole userRole = new UserRole();
-            userRole.setAppUser(appUser);
-            userRole.setRole("ROLE_USER");
-            userRoleService.save(userRole);
-
-            // 默认用户是管理员
-
-            UserRole adminRole = new UserRole();
-            adminRole.setAppUser(appUser);
-            adminRole.setRole("ROLE_ADMIN");
-            userRoleService.save(adminRole);
-
-            System.out.println("默认用户创建成功.");
-        }else {
-            System.out.println("默认用户已存在.");
-        }
-        System.out.println("初始化工作完成.");
+//        if (appUserService.getAUserById(1L) == null) {
+//            AppUser appUser = new AppUser();
+//            appUser.setId(1L);
+//            appUser.setUsername("administrator");
+//            appUser.setPassword(MD5Generator.EncodingMD5("administrator"));
+//            appUser.setEmail("administrator@admin.com");
+//            appUser.setPhone("8888888888");
+//            appUserService.save(appUser);
+//            //普通用户的角色
+//            UserRole userRole = new UserRole();
+//            userRole.setAppUser(appUser);
+//            userRole.setRole("ROLE_USER");
+//            userRoleService.save(userRole);
+//
+//            // 默认用户是管理员
+//
+//            UserRole adminRole = new UserRole();
+//            adminRole.setAppUser(appUser);
+//            adminRole.setRole("ROLE_ADMIN");
+//            userRoleService.save(adminRole);
+//
+//            System.out.println("默认用户创建成功.");
+//        }else {
+//            System.out.println("默认用户已存在.");
+//        }
+//        System.out.println("初始化工作完成.");
+        System.out.println("Test工作完成.");
 
 
     }
